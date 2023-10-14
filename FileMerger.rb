@@ -7,23 +7,36 @@
 # hadd utility (and potentially others).
 # -----------------------------------------------------------------------------
 
+# modules to use
+require 'fileutils'
+
+
+
 module Anandite
+
+  # FileMerger definition -----------------------------------------------------
 
   class FileMerger
 
     # accessors
-    attr_accessor :input, :output
+    attr_accessor :executable
+    attr_reader   :input, :output
 
     # i/o methods -------------------------------------------------------------
 
-    def initialize(input, output)
-      @input  = input
-      @output = output
+    def read_in_list(list)
+      @input = File.readlines(list)
     end
 
-    def read_in_list(list)
-      puts "[under cosntruction]"
-    end  # end 'read_in_list'
+    def set_match_pattern(match)
+      match.gsub!("//", "/")
+      match.gsub!("..", ".")
+      @input = Dir[match]
+    end
+
+    def split_into_chunks(chunk_size)
+      @input = @input.each_slice(chunk_size).to_a
+    end
 
     # merging methods ---------------------------------------------------------
 
